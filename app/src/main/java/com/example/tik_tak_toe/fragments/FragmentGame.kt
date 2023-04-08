@@ -1,18 +1,19 @@
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.tik_tak_toe.R
 import com.example.tik_tak_toe.databinding.FragmentGameBinding
 import com.example.tik_tak_toe.fragments.GameResult
 import com.example.tik_tak_toe.fragments.SeriesResultFragment
 import com.example.tik_tak_toe.utils.GameSettings
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -44,7 +45,8 @@ class FragmentGame : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentGameBinding.bind(view)
 
-        gameSettings = arguments?.get("game_settings") as? GameSettings
+        val dataInString = arguments?.getString("game_settings")
+        gameSettings = Gson().fromJson(dataInString, GameSettings::class.java)
 
         setClickListener()
         addWinningSituations()
@@ -215,19 +217,24 @@ class FragmentGame : Fragment() {
     }
 
     private fun endGame() {
-        val bundle: Bundle = bundleOf()
-        bundle.putSerializable("game_settings", gameSettings)
+        val fragment = GameResult.newInstance(gameSettings!!)
         val ac: FragmentActivity = mContext as FragmentActivity
         val fr = ac.supportFragmentManager.beginTransaction()
-        fr.replace(R.id.frame_layout_main, GameResult::class.java, bundle).commit()
+        fr.replace(R.id.frame_layout_main, fragment).addToBackStack(null).commit()
     }
 
     private fun endSeries() {
-        val bundle: Bundle = bundleOf()
-        bundle.putSerializable("game_settings", gameSettings)
+        val endSeriesFragment = SeriesResultFragment.newInstance(gameSettings!!)
         val ac: FragmentActivity = mContext as FragmentActivity
         val fr = ac.supportFragmentManager.beginTransaction()
-        fr.replace(R.id.frame_layout_main, SeriesResultFragment::class.java, bundle).commit()
+        fr.replace(R.id.frame_layout_main, endSeriesFragment).addToBackStack(null).commit()
+    }
+
+    companion object {
+        fun newInstance(yourData: GameSettings) = FragmentGame().apply {
+            val dataInString = Gson().toJson(yourData).toString()
+            arguments = Bundle().apply { putString("game_settings", dataInString) }
+        }
     }
 
 }

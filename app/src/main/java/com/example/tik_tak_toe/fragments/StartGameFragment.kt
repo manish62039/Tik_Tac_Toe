@@ -52,11 +52,18 @@ class StartGameFragment : Fragment() {
 
     private fun selectFragment() {
         saveGameSettings()
-        val bundle: Bundle = bundleOf()
-        bundle.putSerializable("game_settings", gameSettings)
+//        val bundle: Bundle = bundleOf()
+//        bundle.putSerializable("game_settings", gameSettings)
+//        val ac: FragmentActivity = context as FragmentActivity
+//        val fr = ac.supportFragmentManager.beginTransaction()
+//        fr.replace(R.id.frame_layout_main, FragmentGame::class.java, bundle).commit()
+
         val ac: FragmentActivity = context as FragmentActivity
         val fr = ac.supportFragmentManager.beginTransaction()
-        fr.replace(R.id.frame_layout_main, FragmentGame::class.java, bundle).commit()
+        val fragmentGame = FragmentGame.newInstance(gameSettings)
+        fr.replace(R.id.frame_layout_main, fragmentGame)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun settingChangeListeners() {

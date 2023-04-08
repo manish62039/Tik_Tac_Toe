@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.tik_tak_toe.R
 import com.example.tik_tak_toe.databinding.FragmentGameResultBinding
 import com.example.tik_tak_toe.utils.GameSettings
+import com.google.gson.Gson
 
 
 class GameResult : Fragment() {
@@ -36,7 +37,8 @@ class GameResult : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentGameResultBinding.bind(view)
 
-        gameSettings = arguments?.get("game_settings") as? GameSettings
+        val dataInString = arguments?.getString("game_settings")
+        gameSettings = Gson().fromJson(dataInString, GameSettings::class.java)
 
         if (gameSettings != null) {
             var whoWins = "Draw"
@@ -63,11 +65,17 @@ class GameResult : Fragment() {
     }
 
     private fun selectFragment() {
-        val bundle: Bundle = bundleOf()
-        bundle.putSerializable("game_settings", gameSettings)
+        val gameFragment = FragmentGame.newInstance(gameSettings!!)
         val ac: FragmentActivity = mContext as FragmentActivity
         val fr = ac.supportFragmentManager.beginTransaction()
-        fr.replace(R.id.frame_layout_main, FragmentGame::class.java, bundle).commit()
+        fr.replace(R.id.frame_layout_main, gameFragment).addToBackStack(null).commit()
+    }
+
+    companion object {
+        fun newInstance(yourData: GameSettings) = GameResult().apply {
+            val dataInString = Gson().toJson(yourData).toString()
+            arguments = Bundle().apply { putString("game_settings", dataInString) }
+        }
     }
 
 }

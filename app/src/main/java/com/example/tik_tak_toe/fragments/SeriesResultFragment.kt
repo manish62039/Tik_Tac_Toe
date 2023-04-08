@@ -13,6 +13,7 @@ import com.example.tik_tak_toe.R
 import com.example.tik_tak_toe.databinding.FragmentSeriesResultBinding
 import com.example.tik_tak_toe.utils.GameSettings
 import com.example.tik_tak_toe.utils.GameSettingsSaver
+import com.google.gson.Gson
 
 
 class SeriesResultFragment : Fragment() {
@@ -37,7 +38,8 @@ class SeriesResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSeriesResultBinding.bind(view)
 
-        gameSettings = arguments?.get("game_settings") as? GameSettings
+        val dataInString = arguments?.getString("game_settings")
+        gameSettings = Gson().fromJson(dataInString, GameSettings::class.java)
 
         if (gameSettings != null) {
             val redScore = gameSettings!!.score_of_red
@@ -70,17 +72,23 @@ class SeriesResultFragment : Fragment() {
     }
 
     private fun restartSeries() {
-        val bundle: Bundle = bundleOf()
-        bundle.putSerializable("game_settings", gameSettings)
+        val fragmentGame = FragmentGame.newInstance(gameSettings!!)
         val ac: FragmentActivity = context as FragmentActivity
         val fr = ac.supportFragmentManager.beginTransaction()
-        fr.replace(R.id.frame_layout_main, FragmentGame::class.java, bundle).commit()
+        fr.replace(R.id.frame_layout_main, fragmentGame).addToBackStack(null).commit()
     }
 
     private fun startSettings() {
         val ac: FragmentActivity = mContext as FragmentActivity
         val fr = ac.supportFragmentManager.beginTransaction()
         fr.replace(R.id.frame_layout_main, StartGameFragment()).commit()
+    }
+
+    companion object {
+        fun newInstance(yourData: GameSettings) = SeriesResultFragment().apply {
+            val dataInString = Gson().toJson(yourData).toString()
+            arguments = Bundle().apply { putString("game_settings", dataInString) }
+        }
     }
 
 }
