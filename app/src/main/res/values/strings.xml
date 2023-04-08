@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Tik Tak Toe</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="developed_by_manish">Developed by Manish</string>
+    <string name="_30">30</string>
+    <string name="blue_s_turn">Blue\'s Turn</string>
+    <string name="game_over">Game Over</string>
+    <string name="draw">Draw</string>
+    <string name="score">Score</string>
+    <string name="blue_0">Blue : 0</string>
+    <string name="red_0">Red : 0</string>
+    <string name="next_match">Next Match</string>
+    <string name="series_draw">Series Draw</string>
+    <string name="select_matches">Select Matches</string>
+    <string name="_3">3</string>
+    <string name="_5">5</string>
+    <string name="_7">7</string>
+    <string name="starting_color">Starting Color</string>
+    <string name="blue">Blue</string>
+    <string name="red">Red</string>
+    <string name="game_time_limit">Game Time Limit</string>
+    <string name="_1_m">1 M</string>
+    <string name="_2_m">2 M</string>
+    <string name="_5_m">5 M</string>
+    <string name="start">START</string>
+    <string name="red_wins_the_series">Red wins the Series</string>
+    <string name="blue_wins_the_series">Blue wins the Series</string>
+</resources>
